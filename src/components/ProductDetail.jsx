@@ -9,10 +9,10 @@ import {
 } from "@mui/material";
 
 const ProductDetail = () => {
-  const [age, setAge] = useState("");
+  const [size, setSize] = useState("");
 
   const handleChange = (event) => {
-    setAge(event.target.value);
+    setSize(event.target.value);
   };
   return (
     <section>
@@ -37,13 +37,15 @@ const ProductDetail = () => {
               MenuProps={{ disableScrollLock: true }}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={age}
+              value={size}
               label="Option"
               onChange={handleChange}
             >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              <MenuItem value={"XS"}>XS</MenuItem>
+              <MenuItem value={"S"}>S</MenuItem>
+              <MenuItem value={"M"}>M</MenuItem>
+              <MenuItem value={"L"}>L</MenuItem>
+              <MenuItem value={"XL"}>XL</MenuItem>
             </Select>
           </FormControl>
           <Button variant="contained">장바구니에 추가</Button>
