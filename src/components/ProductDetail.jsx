@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { CartContext } from "context/CartContext";
 
 import {
   MenuItem,
@@ -10,6 +11,7 @@ import {
 
 const ProductDetail = () => {
   const [size, setSize] = useState("");
+  const { setCount } = useContext(CartContext);
 
   const handleChange = (event) => {
     setSize(event.target.value);
@@ -48,7 +50,12 @@ const ProductDetail = () => {
               <MenuItem value={"XL"}>XL</MenuItem>
             </Select>
           </FormControl>
-          <Button variant="contained">장바구니에 추가</Button>
+          <Button
+            onClick={() => setCount((prev) => prev + 1)}
+            variant="contained"
+          >
+            장바구니에 추가
+          </Button>
         </div>
       </article>
     </section>
