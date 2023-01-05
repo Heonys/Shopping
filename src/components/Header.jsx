@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaShopify } from "react-icons/fa";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { BsPencil } from "react-icons/bs";
@@ -9,7 +9,8 @@ import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import { CartContext } from "context/CartContext";
 import { Link } from "react-router-dom";
-import { login } from "api/firebase";
+import { login, logout, onUserStateChange } from "api/firebase";
+import { Avatar } from "antd";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -22,8 +23,11 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const Header = () => {
   const { count } = useContext(CartContext);
+  const [user, setUser] = useState();
 
-  console.log(typeof count);
+  useEffect(() => {
+    onUserStateChange(setUser);
+  }, []);
 
   return (
     <nav className="flex justify-between p-2 mb-2 border-b-2 border-[#ddd]">
@@ -39,21 +43,40 @@ const Header = () => {
         <div className="flex items-center gap-2 text-xl">
           <span>products</span>
 
-          <Link to="/cart">
-            <IconButton aria-label="cart">
-              <StyledBadge badgeContent={count.toString()} color="secondary">
-                <AiOutlineShoppingCart />
-              </StyledBadge>
-            </IconButton>
-          </Link>
+          {user && (
+            <Link to="/cart">
+              <IconButton aria-label="cart">
+                <StyledBadge badgeContent={count.toString()} color="secondary">
+                  <AiOutlineShoppingCart />
+                </StyledBadge>
+              </IconButton>
+            </Link>
+          )}
 
-          <Link to="/product/new" className="text-2xl">
-            <BsPencil />
-          </Link>
+          {user && user.isAdmin && (
+            <Link to="/product/new" className="text-2xl">
+              <BsPencil />
+            </Link>
+          )}
         </div>
-        <Button onClick={login} variant="contained">
-          Login
-        </Button>
+
+        {!user && (
+          <>
+            <Button onClick={login} variant="contained">
+              Login
+            </Button>
+          </>
+        )}
+
+        {user && (
+          <>
+            <Avatar src={user.photoURL} />
+            <span className="hidden md:block text-sm">{`${user.displayName} 님`}</span>
+            <Button onClick={logout} variant="contained">
+              Logout
+            </Button>
+          </>
+        )}
       </div>
     </nav>
   );
