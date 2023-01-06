@@ -9,8 +9,8 @@ import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import { CartContext } from "context/CartContext";
 import { Link } from "react-router-dom";
-import { login, logout, onUserStateChange } from "api/firebase";
 import { Avatar } from "antd";
+import { useAuth } from "context/AuthContext";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -23,11 +23,8 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const Header = () => {
   const { count } = useContext(CartContext);
-  const [user, setUser] = useState();
 
-  useEffect(() => {
-    onUserStateChange(setUser);
-  }, []);
+  const { user, login, logout } = useAuth();
 
   return (
     <nav className="flex justify-between p-2 mb-2 border-b-2 border-[#ddd]">

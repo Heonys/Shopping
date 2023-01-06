@@ -4,6 +4,7 @@ import Product from "components/Product";
 import ProductDetail from "components/ProductDetail";
 import Cart from "components/Cart";
 import NewProduct from "components/NewProduct";
+import ProtectedRoute from "pages/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -13,9 +14,23 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Product /> },
       { path: "/product", element: <Product /> },
-      { path: "/product/new", element: <NewProduct /> },
+      {
+        path: "/product/new",
+        element: (
+          <ProtectedRoute requireAdmin>
+            <NewProduct />
+          </ProtectedRoute>
+        ),
+      },
       { path: "/product/:id", element: <ProductDetail /> },
-      { path: "/cart", element: <Cart /> },
+      {
+        path: "/cart",
+        element: (
+          <ProtectedRoute>
+            <Cart />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]);

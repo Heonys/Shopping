@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
+        brand: "",
         banner: "url('../public/asset/banner.jpg')",
       },
     },
