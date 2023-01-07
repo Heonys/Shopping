@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { v4 as uuid } from "uuid";
 import {
   getAuth,
   signInWithPopup,
@@ -52,6 +53,61 @@ const adminUser = async (user) => {
     });
 };
 
-export const postProduct = async (params) => {
-  return await set(ref(database, "products"), params);
+export const addNewProduct = async (product, url) => {
+  const id = uuid();
+  return await set(ref(database, `products/${id}`), {
+    ...product,
+    id,
+    price: parseInt(product.price),
+    image: url,
+    options: product.options.split(","),
+  });
+};
+
+export const getAllProduct = async () => {
+  return await get(ref(database, `products`))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        return snapshot.val();
+      } else {
+        console.log("No data available");
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
+export const getProductById = async (uuid) => {
+  return await get(ref(database, `products/${uuid}`))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        return snapshot.val();
+      } else {
+        console.log("No data available");
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
+export const addCart = async (product, user) => {
+  return await set(ref(database, `cart/${user.uid}/${uuid()}`), { ...product });
+};
+
+export const getCart = async (user) => {
+  if (user) {
+    return await get(ref(database, `cart/${user.uid}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          return snapshot.val();
+        } else {
+          console.log("No data available");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 };

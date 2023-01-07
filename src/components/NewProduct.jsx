@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Button } from "antd";
-import { postProduct } from "api/firebase";
+import { addNewProduct } from "api/firebase";
 import { imageUploader } from "api/uploader";
 
 const NewProduct = () => {
   const [product, setProduct] = useState({});
   const [file, setFile] = useState();
+  const [isuploading, setIsUploading] = useState();
+  const [success, setSuccess] = useState();
 
   const handleChange = (input) => {
     const { value, name, files } = input.target;
@@ -21,28 +22,34 @@ const NewProduct = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    console.log("envet :: ", event);
-    imageUploader(file).then((res) => console.log(res));
-
-    // const obj = {
-    //   name: "name",
-    //   price: "price",
-    //   category: "category",
-    //   description: "description",
-    //   options: "options",
-    // };
-
-    // postProduct(obj);
+    setIsUploading(true);
+    imageUploader(file)
+      .then((url) => {
+        addNewProduct(product, url).then(() => {
+          setSuccess("등록되었습니다");
+          setTimeout(() => {
+            setSuccess(null);
+          }, 4000);
+        });
+      })
+      .finally(() => setIsUploading(false));
   };
 
   return (
-    <>
-      <div className="text-lg font-semibold py-3 text-center">새 제품 등록</div>
+    <section className="w-full text-center">
+      <div className="text-lg font-bold py-3">새 제품 등록</div>
 
-      {file && <img src={URL.createObjectURL(file)} alt="new file"></img>}
+      {success && <p className="m-2">🎁{success}</p>}
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      {file && (
+        <img
+          className="w-96 mx-auto"
+          src={URL.createObjectURL(file)}
+          alt="new file"
+        ></img>
+      )}
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-12">
         <input
           type="file"
           accept="image/*"
@@ -90,9 +97,11 @@ const NewProduct = () => {
           required
           placeholder="옵션 (콤마로 구분)"
         />
-        <button className=" bg-red-400 text-white">제품 등록하기</button>
+        <button className=" bg-red-400 text-white" disabled={isuploading}>
+          {isuploading ? "업로드중..." : "제품 등록하기"}
+        </button>
       </form>
-    </>
+    </section>
   );
 };
 

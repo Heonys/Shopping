@@ -1,38 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineMinusSquare } from "react-icons/ai";
 import { AiOutlinePlusSquare } from "react-icons/ai";
 import { BsFillTrashFill } from "react-icons/bs";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { FaEquals } from "react-icons/fa";
 import { Button } from "antd";
+import { getCart } from "api/firebase";
+import { useAuth } from "context/AuthContext";
 
 const Cart = () => {
+  const { user } = useAuth();
+  const [cartList, setCartList] = useState();
+
+  useEffect(() => {
+    getCart(user).then((res) => {
+      res && setCartList(Object.values(res));
+    });
+  }, [user]);
+
   return (
     <section>
       <div className="text-lg font-semibold py-3 text-center border-b-2 border-[#ddd]">
         내 장바구니
       </div>
-
-      {[1, 2, 3].map((row, index) => {
-        return (
-          <div className="flex pt-2 px-10 space-x-3" key={index}>
-            <img className="h-[250px] mb-2" src="/assets/1.webp" alt="" />
-            <div className="w-full flex justify-between px-2">
-              <div className="flex flex-col justify-center">
-                <p className="text-sm mb-1">GOLD COTTON WEEED 드레스</p>
-                <p className="text-gray-400">M</p>
-                <p className="">219,000원</p>
-              </div>
-              <div className="flex items-center space-x-2">
-                <AiOutlineMinusSquare />
-                <p>{2}</p>
-                <AiOutlinePlusSquare />
-                <BsFillTrashFill />
+      {cartList &&
+        cartList.map((row, index) => {
+          return (
+            <div className="flex pt-2 px-10 space-x-3" key={index}>
+              <img className="h-[250px] mb-2" src={cartList.image} alt="" />
+              <div className="w-full flex justify-between px-2">
+                <div className="flex flex-col justify-center">
+                  <p className="text-sm mb-1">{cartList.title}</p>
+                  <p className="text-gray-400">{cartList.options}</p>
+                  <p className="">{cartList.price}</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <AiOutlineMinusSquare />
+                  <p>{2}</p>
+                  <AiOutlinePlusSquare />
+                  <BsFillTrashFill />
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
 
       <div className="py-3 border-t-2 border-[#ddd] flex justify-evenly pb-10">
         <div className="p-2">

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { FaShopify } from "react-icons/fa";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { BsPencil } from "react-icons/bs";
@@ -7,7 +7,6 @@ import { Button } from "@mui/material";
 import Badge from "@mui/material/Badge";
 import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
-import { CartContext } from "context/CartContext";
 import { Link } from "react-router-dom";
 import { Avatar } from "antd";
 import { useAuth } from "context/AuthContext";
@@ -22,8 +21,6 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 const Header = () => {
-  const { count } = useContext(CartContext);
-
   const { user, login, logout } = useAuth();
 
   return (
@@ -38,12 +35,12 @@ const Header = () => {
 
       <div className="flex items-center text-lg gap-4 font-semibold">
         <div className="flex items-center gap-2 text-xl">
-          <span>products</span>
+          <Link to="/product">products</Link>
 
           {user && (
             <Link to="/cart">
               <IconButton aria-label="cart">
-                <StyledBadge badgeContent={count.toString()} color="secondary">
+                <StyledBadge badgeContent={3} color="secondary">
                   <AiOutlineShoppingCart />
                 </StyledBadge>
               </IconButton>

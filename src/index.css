@@ -16,3 +16,7 @@ body {
   width: 100%;
   max-width: 80%;
 }
+
+input {
+  @apply p-4 outline-none border border-gray-300 my-1;
+}

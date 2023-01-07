@@ -5,6 +5,7 @@ import ProductDetail from "components/ProductDetail";
 import Cart from "components/Cart";
 import NewProduct from "components/NewProduct";
 import ProtectedRoute from "pages/ProtectedRoute";
+import Home from "components/Home";
 
 export const router = createBrowserRouter([
   {
@@ -12,7 +13,7 @@ export const router = createBrowserRouter([
     element: <App />,
     errorElement: <div>에러 페이지</div>,
     children: [
-      { index: true, element: <Product /> },
+      { index: true, element: <Home /> },
       { path: "/product", element: <Product /> },
       {
         path: "/product/new",
