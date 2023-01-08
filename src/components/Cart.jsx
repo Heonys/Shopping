@@ -14,9 +14,22 @@ const Cart = () => {
 
   useEffect(() => {
     getCart(user).then((res) => {
-      res && setCartList(Object.values(res));
+      res &&
+        setCartList(
+          Object.values(res).map((value) => {
+            return { ...value, count: 1 };
+          })
+        );
     });
   }, [user]);
+
+  const onPlus = (index) => {
+    console.log(index);
+  };
+
+  const onMinus = (index) => {
+    console.log(index);
+  };
 
   return (
     <section>
@@ -27,17 +40,17 @@ const Cart = () => {
         cartList.map((row, index) => {
           return (
             <div className="flex pt-2 px-10 space-x-3" key={index}>
-              <img className="h-[250px] mb-2" src={cartList.image} alt="" />
+              <img className="h-[250px] mb-2" src={row.image} alt="" />
               <div className="w-full flex justify-between px-2">
                 <div className="flex flex-col justify-center">
-                  <p className="text-sm mb-1">{cartList.title}</p>
-                  <p className="text-gray-400">{cartList.options}</p>
-                  <p className="">{cartList.price}</p>
+                  <p className="text-sm mb-1">{row.title}</p>
+                  <p className="text-gray-400">{row.options}</p>
+                  <p className="">{row.price}</p>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <AiOutlineMinusSquare />
-                  <p>{2}</p>
-                  <AiOutlinePlusSquare />
+                  <AiOutlineMinusSquare onClick={() => onPlus(index)} />
+                  <p>{row.count}</p>
+                  <AiOutlinePlusSquare onClick={() => onMinus(index)} />
                   <BsFillTrashFill />
                 </div>
               </div>

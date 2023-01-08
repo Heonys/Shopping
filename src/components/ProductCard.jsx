@@ -1,8 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const ProductCard = ({ data }) => {
-  const { category, id, image, price, title } = data;
+const ProductCard = ({ data: { category, id, image, price, title } }) => {
   const navigate = useNavigate();
 
   const clickHandler = () => {
@@ -11,8 +10,11 @@ const ProductCard = ({ data }) => {
 
   return (
     <>
-      <div className="w-full cursor-pointer" onClick={clickHandler}>
-        <img className="mb-2" src={image} alt="" />
+      <div
+        className="rounded-lg shadow-md overflow-hidden  cursor-pointer"
+        onClick={clickHandler}
+      >
+        <img className="w-full mb-2" src={image} alt="" />
         <p className="text-sm mb-1">{title}</p>
         <div className="flex justify-between text-sm p-1">
           <p className="text-gray-400">{category}</p>

@@ -68,10 +68,9 @@ export const getAllProduct = async () => {
   return await get(ref(database, `products`))
     .then((snapshot) => {
       if (snapshot.exists()) {
-        return snapshot.val();
-      } else {
-        console.log("No data available");
+        return Object.values(snapshot.val());
       }
+      return [];
     })
     .catch((error) => {
       console.error(error);
@@ -82,9 +81,7 @@ export const getProductById = async (uuid) => {
   return await get(ref(database, `products/${uuid}`))
     .then((snapshot) => {
       if (snapshot.exists()) {
-        return snapshot.val();
-      } else {
-        console.log("No data available");
+        return Object.values(snapshot.val());
       }
     })
     .catch((error) => {
