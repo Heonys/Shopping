@@ -90,8 +90,12 @@ export const getProductById = async (uuid) => {
 };
 
 export const addCart = async (product, user) => {
-  return await set(ref(database, `cart/${user.uid}/${uuid()}`), { ...product });
+  return await set(ref(database, `cart/${user.uid}/${product.id}`), {
+    ...product,
+  });
 };
+
+export const deleteCart = async (id, user) => {};
 
 export const getCart = async (user) => {
   if (user) {

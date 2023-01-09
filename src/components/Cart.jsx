@@ -7,10 +7,12 @@ import { FaEquals } from "react-icons/fa";
 import { Button } from "antd";
 import { getCart } from "api/firebase";
 import { useAuth } from "context/AuthContext";
+import { useCart } from "context/CartContext";
 
 const Cart = () => {
   const { user } = useAuth();
   const [cartList, setCartList] = useState();
+  const { setCount } = useCart();
 
   useEffect(() => {
     getCart(user).then((res) => {
@@ -30,6 +32,8 @@ const Cart = () => {
   const onMinus = (index) => {
     console.log(index);
   };
+
+  const onDelete = () => {};
 
   return (
     <section>
@@ -51,7 +55,7 @@ const Cart = () => {
                   <AiOutlineMinusSquare onClick={() => onPlus(index)} />
                   <p>{row.count}</p>
                   <AiOutlinePlusSquare onClick={() => onMinus(index)} />
-                  <BsFillTrashFill />
+                  <BsFillTrashFill onClick={onDelete} />
                 </div>
               </div>
             </div>
