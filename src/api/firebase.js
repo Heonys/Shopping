@@ -8,7 +8,7 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { getDatabase, ref, get, set } from "firebase/database";
+import { getDatabase, ref, get, set, remove } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -89,20 +89,21 @@ export const getProductById = async (uuid) => {
     });
 };
 
-export const addCart = async (product, user) => {
-  return await set(ref(database, `cart/${user.uid}/${product.id}`), {
-    ...product,
-  });
+export const addOrUpdateCart = async (product, user) => {
+  return await set(ref(database, `cart/${user.uid}/${product.id}`), product);
 };
 
-export const deleteCart = async (id, user) => {};
+export const deleteCart = async (user, producId) => {
+  return remove(ref(database, `cart/${user.uid}/${producId}`));
+};
 
 export const getCart = async (user) => {
   if (user) {
     return await get(ref(database, `cart/${user.uid}`))
       .then((snapshot) => {
         if (snapshot.exists()) {
-          return snapshot.val();
+          const items = snapshot.val() || {};
+          return Object.values(items);
         } else {
           console.log("No data available");
         }

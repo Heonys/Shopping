@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { addCart } from "api/firebase";
+import { addOrUpdateCart } from "api/firebase";
 import { useAuth } from "context/AuthContext";
-import { useCart } from "context/CartContext";
 
 import {
   MenuItem,
@@ -14,7 +13,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 const ProductDetail = () => {
   const { user } = useAuth();
-  const { setCount } = useCart();
+  // const { setCount } = useCart();
   const navigate = useNavigate();
   const {
     state: {
@@ -29,11 +28,8 @@ const ProductDetail = () => {
   };
 
   const onCart = () => {
-    addCart({ ...product, options: size }, user) //
-      .then(() => {
-        setCount((prev) => prev + 1);
-        navigate("/");
-      });
+    addOrUpdateCart({ ...product, options: size, quantity: 1 }, user) //
+      .then(() => navigate("/"));
   };
 
   return (

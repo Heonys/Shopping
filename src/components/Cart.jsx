@@ -1,47 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { AiOutlineMinusSquare } from "react-icons/ai";
 import { AiOutlinePlusSquare } from "react-icons/ai";
 import { BsFillTrashFill } from "react-icons/bs";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { FaEquals } from "react-icons/fa";
 import { Button } from "antd";
-import { getCart } from "api/firebase";
+import { getCart, deleteCart, addOrUpdateCart } from "api/firebase";
 import { useAuth } from "context/AuthContext";
-import { useCart } from "context/CartContext";
+import { useQuery } from "@tanstack/react-query";
+
+const SHIPPING = 3000;
 
 const Cart = () => {
   const { user } = useAuth();
-  const [cartList, setCartList] = useState();
-  const { setCount } = useCart();
+  const { data, isLoading } = new useQuery(["carts"], () => getCart(user));
+  const hasProduct = data && data.length > 0;
+  const totalProducts =
+    data &&
+    data.reduce((acc, cur) => acc + parseInt(cur.price) * cur.quantity, 0);
 
-  useEffect(() => {
-    getCart(user).then((res) => {
-      res &&
-        setCartList(
-          Object.values(res).map((value) => {
-            return { ...value, count: 1 };
-          })
-        );
-    });
-  }, [user]);
+  const onPlus = (id) => {
+    const product = data.filter((row) => row.id === id);
 
-  const onPlus = (index) => {
-    console.log(index);
+    addOrUpdateCart({ ...product[0], quantity: product[0].quantity + 1 }, user);
   };
 
-  const onMinus = (index) => {
-    console.log(index);
+  const onMinus = (id) => {
+    const product = data.filter((row) => row.id === id);
+    if (product[0].quantity < 2) return;
+    addOrUpdateCart({ ...product[0], quantity: product[0].quantity + 1 }, user);
   };
 
-  const onDelete = () => {};
+  const onDelete = (id) => {
+    deleteCart(user, id).then(() => {});
+  };
 
   return (
     <section>
       <div className="text-lg font-semibold py-3 text-center border-b-2 border-[#ddd]">
         내 장바구니
       </div>
-      {cartList &&
-        cartList.map((row, index) => {
+      {isLoading && <p>로딩중입니다...</p>}
+      {!hasProduct && <p>장바구니에 상품이없습니다</p>}
+      {hasProduct &&
+        data.map((row, index) => {
           return (
             <div className="flex pt-2 px-10 space-x-3" key={index}>
               <img className="h-[250px] mb-2" src={row.image} alt="" />
@@ -52,10 +54,10 @@ const Cart = () => {
                   <p className="">{row.price}</p>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <AiOutlineMinusSquare onClick={() => onPlus(index)} />
-                  <p>{row.count}</p>
-                  <AiOutlinePlusSquare onClick={() => onMinus(index)} />
-                  <BsFillTrashFill onClick={onDelete} />
+                  <AiOutlineMinusSquare onClick={() => onMinus(row.id)} />
+                  <p>{row.quantity}</p>
+                  <AiOutlinePlusSquare onClick={() => onPlus(row.id)} />
+                  <BsFillTrashFill onClick={() => onDelete(row.id)} />
                 </div>
               </div>
             </div>
@@ -65,7 +67,7 @@ const Cart = () => {
       <div className="py-3 border-t-2 border-[#ddd] flex justify-evenly pb-10">
         <div className="p-2">
           <div>상품총액</div>
-          <div>30,000 원</div>
+          <div>{totalProducts}원</div>
         </div>
 
         <div className="flex items-center">
@@ -73,7 +75,7 @@ const Cart = () => {
         </div>
         <div>
           <div>배송비</div>
-          <div>6,000 원</div>
+          <div>{SHIPPING}원</div>
         </div>
 
         <div className="flex items-center">
@@ -81,7 +83,7 @@ const Cart = () => {
         </div>
         <div>
           <div>총 가격</div>
-          <div>36,000 원</div>
+          <div>{totalProducts + SHIPPING}원</div>
         </div>
       </div>
 
