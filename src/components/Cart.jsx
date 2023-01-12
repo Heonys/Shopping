@@ -36,7 +36,7 @@ const Cart = () => {
   };
 
   return (
-    <section>
+    <section className="p-8 flex flex-col">
       <div className="text-lg font-semibold py-3 text-center border-b-2 border-[#ddd]">
         내 장바구니
       </div>
@@ -64,34 +64,36 @@ const Cart = () => {
           );
         })}
 
-      <div className="py-3 border-t-2 border-[#ddd] flex justify-evenly pb-10">
-        <div className="p-2">
+      <div className="p-8 mx-2 flex justify-between items-center border-t-2 rounded-2xl text-center text-lg bg-gray-50 border-[#ddd]  pb-10">
+        <div className="p-2 shrink-0">
           <div>상품총액</div>
-          <div>{totalProducts}원</div>
+          <div className="font-bold text-red-500 text-xl md:text-2xl">
+            {totalProducts}원
+          </div>
         </div>
 
         <div className="flex items-center">
           <AiFillPlusCircle />
         </div>
-        <div>
+        <div className="p-2 shrink-0">
           <div>배송비</div>
-          <div>{SHIPPING}원</div>
+          <div className="font-bold text-red-500 text-xl md:text-2xl">
+            {SHIPPING}원
+          </div>
         </div>
 
         <div className="flex items-center">
           <FaEquals />
         </div>
-        <div>
+        <div className="p-2 shrink-0">
           <div>총 가격</div>
-          <div>{totalProducts + SHIPPING}원</div>
+          <div className="font-bold text-red-500 text-xl md:text-2xl">
+            {totalProducts + SHIPPING}원
+          </div>
         </div>
       </div>
 
-      <Button
-        type="primary"
-        danger
-        className="w-full h-9 mb-20 text-white font-bold text-lg"
-      >
+      <Button type="primary" danger className=" text-white font-bold text-lg">
         주문하기
       </Button>
     </section>
