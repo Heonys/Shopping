@@ -93,8 +93,8 @@ export const addOrUpdateCart = async (product, user) => {
   return await set(ref(database, `cart/${user.uid}/${product.id}`), product);
 };
 
-export const deleteCart = async (user, producId) => {
-  return remove(ref(database, `cart/${user.uid}/${producId}`));
+export const deleteCart = async (id, user) => {
+  return remove(ref(database, `cart/${user.uid}/${id}`));
 };
 
 export const getCart = async (user) => {

@@ -35,7 +35,7 @@ const Cart = () => {
     if (product[0].quantity < 2) return;
     addOrUpdateCartMutation.mutate({
       ...product[0],
-      quantity: product[0].quantity + 1,
+      quantity: product[0].quantity - 1,
     });
   };
 
