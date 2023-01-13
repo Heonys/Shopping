@@ -5,15 +5,17 @@ import { BsFillTrashFill } from "react-icons/bs";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { FaEquals } from "react-icons/fa";
 import { Button } from "antd";
-import { getCart, deleteCart, addOrUpdateCart } from "api/firebase";
-import { useAuth } from "context/AuthContext";
-import { useQuery } from "@tanstack/react-query";
+import useCarts from "hooks/useCarts";
 
 const SHIPPING = 3000;
 
 const Cart = () => {
-  const { user } = useAuth();
-  const { data, isLoading } = new useQuery(["carts"], () => getCart(user));
+  const {
+    cartQuery: { isLoading, data },
+    addOrUpdateCartMutation,
+    deleteCartMutation,
+  } = useCarts();
+
   const hasProduct = data && data.length > 0;
   const totalProducts =
     data &&
@@ -22,17 +24,23 @@ const Cart = () => {
   const onPlus = (id) => {
     const product = data.filter((row) => row.id === id);
 
-    addOrUpdateCart({ ...product[0], quantity: product[0].quantity + 1 }, user);
+    addOrUpdateCartMutation.mutate({
+      ...product[0],
+      quantity: product[0].quantity + 1,
+    });
   };
 
   const onMinus = (id) => {
     const product = data.filter((row) => row.id === id);
     if (product[0].quantity < 2) return;
-    addOrUpdateCart({ ...product[0], quantity: product[0].quantity + 1 }, user);
+    addOrUpdateCartMutation.mutate({
+      ...product[0],
+      quantity: product[0].quantity + 1,
+    });
   };
 
   const onDelete = (id) => {
-    deleteCart(user, id).then(() => {});
+    deleteCartMutation.mutate(id).then(() => {});
   };
 
   return (
@@ -44,6 +52,7 @@ const Cart = () => {
       {!hasProduct && <p>장바구니에 상품이없습니다</p>}
       {hasProduct &&
         data.map((row, index) => {
+          console.log(row);
           return (
             <div className="flex pt-2 px-10 space-x-3" key={index}>
               <img className="h-[250px] mb-2" src={row.image} alt="" />

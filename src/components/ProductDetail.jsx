@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { addOrUpdateCart } from "api/firebase";
-import { useAuth } from "context/AuthContext";
-
+import useCarts from "hooks/useCarts";
 import {
   MenuItem,
   FormControl,
@@ -12,8 +10,7 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 
 const ProductDetail = () => {
-  const { user } = useAuth();
-  // const { setCount } = useCart();
+  const { addOrUpdateCartMutation } = useCarts();
   const navigate = useNavigate();
   const {
     state: {
@@ -28,7 +25,8 @@ const ProductDetail = () => {
   };
 
   const onCart = () => {
-    addOrUpdateCart({ ...product, options: size, quantity: 1 }, user) //
+    addOrUpdateCartMutation
+      .mutate({ ...product, options: size, quantity: 1 }) //
       .then(() => navigate("/"));
   };
 

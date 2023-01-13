@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { FaShopify } from "react-icons/fa";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { BsPencil } from "react-icons/bs";
@@ -10,8 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import { Link } from "react-router-dom";
 import { Avatar } from "antd";
 import { useAuth } from "context/AuthContext";
-import { getCart } from "api/firebase";
-import { useQuery } from "@tanstack/react-query";
+import useCarts from "hooks/useCarts";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -25,7 +24,9 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 const Header = () => {
   const { user, login, logout } = useAuth();
 
-  const { data } = useQuery(["carts"], () => getCart(user));
+  const {
+    cartQuery: { data },
+  } = useCarts();
 
   return (
     <nav className="flex justify-between p-2 mb-2 border-b-2 border-[#ddd]">

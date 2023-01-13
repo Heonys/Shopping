@@ -1,14 +1,11 @@
 import React from "react";
-import { getAllProduct } from "api/firebase";
 import ProductCard from "./ProductCard";
-import { useQuery } from "@tanstack/react-query";
+import useProduct from "hooks/useProducts";
 
 const Product = () => {
   const {
-    isLoading,
-    error,
-    data: products,
-  } = useQuery(["products"], getAllProduct);
+    getAllProducts: { isLoading, data: products, error },
+  } = useProduct();
 
   return (
     <>

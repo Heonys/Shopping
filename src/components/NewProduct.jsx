@@ -1,21 +1,13 @@
 import React, { useState } from "react";
-import { addNewProduct } from "api/firebase";
 import { imageUploader } from "api/uploader";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useProduct from "hooks/useProducts";
 
 const NewProduct = () => {
   const [product, setProduct] = useState({});
   const [file, setFile] = useState();
   const [isuploading, setIsUploading] = useState();
   const [success, setSuccess] = useState();
-  const queryClient = useQueryClient();
-
-  const addMutation = useMutation(
-    ({ product, url }) => addNewProduct(product, url),
-    {
-      onSuccess: queryClient.invalidateQueries(["products"]),
-    }
-  );
+  const { addMutation } = useProduct();
 
   const handleChange = (input) => {
     const { value, name, files } = input.target;
