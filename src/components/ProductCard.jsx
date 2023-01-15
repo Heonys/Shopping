@@ -1,14 +1,14 @@
 import React from "react";
 
-const ProductCard = () => {
+const ProductCard = ({ product: { title, price, options, tag, url } }) => {
   return (
     <section className="flex justify-between px-5 ">
-      <img className="" src="/asset/shoes1.jpg" alt="" />
+      <img className="" src={url.url} alt="" />
       <div>
-        <div>타이틀</div>
-        <div>가격</div>
-        <div>태그</div>
-        <div>옵션</div>
+        <div>{title}</div>
+        <div>{price}</div>
+        <div>{tag}</div>
+        <div>{options}</div>
       </div>
     </section>
   );

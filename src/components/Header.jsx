@@ -4,19 +4,10 @@ import { BsPencilSquare } from "react-icons/bs";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { Button } from "antd";
 import { Link } from "react-router-dom";
-import { rogin, logout } from "api/firebase";
 import { useAuth } from "context/useAuth";
 
 const Header = () => {
-  const { user, setUser } = useAuth();
-
-  const loginHandler = () => {
-    rogin().then(setUser);
-  };
-
-  const logoutHandler = () => {
-    logout().then(setUser);
-  };
+  const { user, login, logout } = useAuth();
 
   return (
     <div className="flex justify-between bg-[#253d87] p-2 ">
@@ -29,21 +20,27 @@ const Header = () => {
         <Link to="/product">
           <div className="text-xl">product</div>
         </Link>
-        <Link to="/newProduct">
-          <BsPencilSquare className="text-2xl" />
-        </Link>
+        {user && user.isAdmin && (
+          <Link to="/newProduct">
+            <BsPencilSquare className="text-2xl" />
+          </Link>
+        )}
         <Link to="/cart">
           <AiOutlineShoppingCart className="text-2xl" />
         </Link>
         {!user && (
-          <Button onClick={loginHandler} className="bg-white font-semibold">
+          <Button onClick={login} className="bg-white font-semibold">
             Login
           </Button>
         )}
         {user && (
-          <Button onClick={logoutHandler} className="bg-white font-semibold">
-            Logout
-          </Button>
+          <>
+            <img className="rounded-full w-8 h-8 " src={user.photoURL} alt="" />
+            <span className="hidden md:block">{user.displayName} 님</span>
+            <Button onClick={logout} className="bg-white font-semibold">
+              Logout
+            </Button>
+          </>
         )}
       </div>
     </div>

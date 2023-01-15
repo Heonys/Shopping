@@ -1,18 +1,26 @@
 import React, { useState } from "react";
+import { uploader } from "api/uploader";
+import { addProduct } from "api/firebase";
+import { useNavigate } from "react-router-dom";
 
 const NewProduct = () => {
   const [product, setProduct] = useState({});
   const [image, setImage] = useState();
+  const navigate = useNavigate();
 
   const onSubmit = (e) => {
     e.preventDefault();
+    uploader(image)
+      .then((url) => {
+        addProduct(product, url);
+      })
+      .then(navigate("/"));
   };
 
   const handleChange = ({ target }) => {
     const { name, value, files } = target;
     if (name === "file") {
       setImage(files && files[0]);
-      console.log("?? ", image);
       return;
     }
     setProduct((prev) => ({ ...prev, [name]: value }));
