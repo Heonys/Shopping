@@ -10,7 +10,7 @@ const ProductCard = ({
   return (
     <section
       className="rounded-lg shadow-md overflow-hidden cursor-pointer flex flex-col px-5 transition-all hover:scale-105"
-      onClick={() => navigate(`product/${id}`, { state: product })}
+      onClick={() => navigate(`/product/${id}`, { state: product })}
     >
       <img className="w-full" src={url.url} alt="" />
       <div className="">

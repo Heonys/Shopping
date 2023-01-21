@@ -6,7 +6,7 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { getDatabase, ref, get, set } from "firebase/database";
+import { getDatabase, ref, get, set, remove } from "firebase/database";
 import { v4 as uuid } from "uuid";
 
 const provider = new GoogleAuthProvider();
@@ -74,6 +74,28 @@ export const getProduct = async (uid) => {
     .then((snapshot) => {
       if (snapshot.exists()) {
         return Object.values(snapshot.val());
+      }
+      return [];
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
+export const addOrUpdateCart = async (product, uid) => {
+  set(ref(database, `cart2/${uid}/${product.id}`), product).then((res) => true);
+};
+
+export const removeCart = async (product, uid) => {
+  remove(ref(database, `cart2/${uid}/${product.id}`)).then((res) => true);
+};
+
+export const getCart = async (uid) => {
+  return get(ref(database, `cart2/${uid}`))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val() || {};
+        return Object.values(data);
       }
       return [];
     })

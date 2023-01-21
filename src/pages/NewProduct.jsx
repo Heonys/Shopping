@@ -1,20 +1,28 @@
 import React, { useState } from "react";
 import { uploader } from "api/uploader";
-import { addProduct } from "api/firebase";
-import { useNavigate } from "react-router-dom";
+import useProducts from "hooks/useProducts";
 
 const NewProduct = () => {
   const [product, setProduct] = useState({});
   const [image, setImage] = useState();
-  const navigate = useNavigate();
+  const [success, setSuccess] = useState(null);
+  const { addProductMutation } = useProducts();
 
   const onSubmit = (e) => {
     e.preventDefault();
-    uploader(image)
-      .then((url) => {
-        addProduct(product, url);
-      })
-      .then(navigate("/"));
+    uploader(image).then((url) => {
+      addProductMutation.mutate(
+        { product, url },
+        {
+          onSuccess: () => {
+            setSuccess("새 제품이 등록되었습니다");
+            setTimeout(() => {
+              setSuccess(null);
+            }, 4000);
+          },
+        }
+      );
+    });
   };
 
   const handleChange = ({ target }) => {
@@ -34,13 +42,7 @@ const NewProduct = () => {
         </div>
       )}
       <form className="flex flex-col px-12" onSubmit={onSubmit}>
-        <input
-          name="file"
-          type="file"
-          accept="image/*"
-          required
-          onChange={handleChange}
-        />
+        <input name="file" type="file" accept="image/*" required onChange={handleChange} />
         <input
           name="title"
           placeholder="타이틀"
@@ -73,10 +75,9 @@ const NewProduct = () => {
           onChange={handleChange}
           value={product.options || ""}
         />
-        <button className="bg-red-400 mt-2 p-1 text-white font-semibold">
-          제품 등록하기
-        </button>
+        <button className="bg-red-400 mt-2 p-1 text-white font-semibold">제품 등록하기</button>
       </form>
+      {success && <div className="text-center text-green-600 font-bold">✨{success}✨</div>}
     </section>
   );
 };

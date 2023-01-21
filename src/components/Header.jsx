@@ -5,9 +5,13 @@ import { AiOutlineShoppingCart } from "react-icons/ai";
 import { Button } from "antd";
 import { Link } from "react-router-dom";
 import { useAuth } from "context/useAuth";
+import useCart from "hooks/useCart";
 
 const Header = () => {
   const { user, login, logout } = useAuth();
+  const {
+    getCartQuery: { data },
+  } = useCart();
 
   return (
     <div className="flex justify-between bg-[#253d87] p-2 ">
@@ -25,9 +29,16 @@ const Header = () => {
             <BsPencilSquare className="text-2xl" />
           </Link>
         )}
-        <Link to="/cart">
-          <AiOutlineShoppingCart className="text-2xl" />
-        </Link>
+        <div className="relative">
+          <Link to="/cart">
+            <AiOutlineShoppingCart className="text-2xl" />
+          </Link>
+          {data && (
+            <p className="absolute text-sm bg-[tomato] rounded-full font-bold text-white -top-1 -right-2 w-4 h-4 flex justify-center items-center">
+              {data.length}
+            </p>
+          )}
+        </div>
         {!user && (
           <Button onClick={login} className="bg-white font-semibold">
             Login
